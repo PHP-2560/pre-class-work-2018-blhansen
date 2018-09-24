@@ -97,7 +97,41 @@ Totals %>%
 The 5 countries with the highest total GDP over all years combined are, in decreasing order: the United States, Japan, China, Germany, and the United Kingdom.
 
 5. What countries and years had life expectancies of _at least_ 80 years? _N.b. only output the columns of interest: country, life expectancy and year (in that order)._
+
+```{r}
+gapminder %>%
+  
+  #return rows with observations containing a life expectancy of at least 80 years
+  filter(lifeExp >= 80) %>%
+  
+  #select columns of interest
+  select(country, lifeExp, year)
+```
+
+
 6. What 10 countries have the strongest correlation (in either direction) between life expectancy and per capita GDP?
+
+```{r}
+gapminder %>%
+  
+  #group data by country
+  group_by(country) %>%
+  
+  #select relevant columns
+  select(country, lifeExp, gdpPercap) %>%
+  
+  #calculate correlation between lifeExp and gdpPercap columns and store its absolute value in a new data frame, associations
+  summarize("Estimated_abs_correlation" = abs(cor.test(lifeExp, gdpPercap)$estimate)) -> associations
+
+associations %>%
+  
+  #display results in descending order
+  arrange(desc(Estimated_abs_correlation))
+```
+
+In our data, the 10 countries with the strongest observed correlation between life expectancy and per capita GDP are, in descending order: France, Austria, Belgium, Norway, Oman, the United Kingdom, Italy, Israel, Denmark, and Australia. 
+
+
 7. Which combinations of continent (besides Asia) and year have the highest average population across all countries? _N.b. your output should include all results sorted by highest average population_. With what you already know, this one may stump you. See [this Q&A](http://stackoverflow.com/q/27207963/654296) for how to `ungroup` before `arrange`ing. This also [behaves differently in more recent versions of dplyr](https://github.com/hadley/dplyr/releases/tag/v0.5.0).
 8. Which three countries have had the most consistent population estimates (i.e. lowest standard deviation) across the years of available data? 
 9. Subset **gm** to only include observations from 1992 and store the results as **gm1992**. What kind of object is this?
