@@ -135,10 +135,25 @@ In our data, the 10 countries with the strongest observed correlation between li
 7. Which combinations of continent (besides Asia) and year have the highest average population across all countries? _N.b. your output should include all results sorted by highest average population_. With what you already know, this one may stump you. See [this Q&A](http://stackoverflow.com/q/27207963/654296) for how to `ungroup` before `arrange`ing. This also [behaves differently in more recent versions of dplyr](https://github.com/hadley/dplyr/releases/tag/v0.5.0).
 
 ```{r}
-
+gapminder %>%
+  
+  #remove observations from Asian countries
+  filter(continent != "Asia") %>%
+  
+  #group by continent and year
+  group_by(continent, year) %>%
+  
+  #calculate average population for each continent/year pair across all represented countries
+  summarize("avg_pop_continent_year"=mean(pop)) %>%
+  
+  #remove groups so we can sort
+  ungroup() %>%
+  
+  #display results by descending average population
+  arrange(desc(avg_pop_continent_year))
 ```
 
-
+The combination of continent and year which had the highest average population across all countries was the Americas and 2007.
 
 8. Which three countries have had the most consistent population estimates (i.e. lowest standard deviation) across the years of available data? 
 
