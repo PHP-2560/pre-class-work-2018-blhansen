@@ -59,7 +59,7 @@ sum(seq(0,1000,2))
 
 Here is a dataframe of survey data containing 5 questions :
 
-```{r, eval=FALSE}
+```{r}
 survey <- data.frame(
                      "participant" = c(1, 2, 3, 4, 5, 6),
                      "q1" = c(5, 3, 2, 7, 11, 0),
@@ -73,4 +73,49 @@ The response to each question should be an integer between 1 and 5. Obviously, w
 
 A. Using a loop, create a new dataframe called survey.clean where all the invalid values (those that are not integers between 1 and 5) are set to NA.
 
+```{r}
+
+#copy survey into survey.clean
+survey.clean <- survey
+
+#loop through rows of survey
+for (i in 1:nrow(survey)){
+  
+  #loop through columns of survey
+  for(j in 1:length(survey[i,])){
+    
+    #if value at specific index is invalid, replace value with NA
+    if (survey[i,j] < 1 | survey[i,j] > 5) {
+      survey.clean[i,j] <- NA
+    }
+  }
+}
+```
+
+
 B. Now, again using a loop, add a new column to the dataframe called “invalid.answers” that indicates, for each participant, how many bad answers they gave.
+
+```{r}
+#initialize invalid.answers columns
+survey.clean$invalid.answers <- rep(NA,6)
+
+#loop through rows in survey.clean
+for (i in 1:nrow(survey.clean)){
+  
+  n = 0
+  
+  #loop through columns, except for the last column, which is initially set to NA
+  for(j in 1:(length(survey.clean[i,])-1)){
+    
+    #add one to n variable if value at index is NA (indicating invalid answer)
+    if ( is.na(survey.clean[i,j]) ){
+      
+      n = n + 1
+      
+    }
+    
+  }
+  #save n to invalid.answers
+  survey.clean[i,7] = n
+}
+```
