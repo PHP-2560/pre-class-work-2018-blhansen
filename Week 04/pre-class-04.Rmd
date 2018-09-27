@@ -10,13 +10,50 @@ Make sure you commit this often with meaningful messages.
 
 Using a loop, print the integers from 1 to 50. 
 
+
+```{r}
+for (i in seq(1,50,1)){
+  print(i)
+}
+```
+
+
 ### Question 2:
 
 A.  Using a loop, add all the integers between 0 and 1000.
 
+```{r}
+sum <- 0
+
+for (i in seq(0, 1000, 1)){
+  sum = sum + i
+}
+sum
+```
+
 B. Now, add all the EVEN integers between 0 and 1000 (hint: use seq())
 
+```{r}
+#initialze sum variable
+sum=0
+
+for (i in seq(0, 1000, 2)){
+  sum = sum + i
+}
+sum
+```
+
+
 C. Now, repeat A and B WITHOUT using a loop.
+
+```{r}
+#part a
+sum(seq(0,1000,1))
+
+#part b
+sum(seq(0,1000,2))
+```
+
 
 ### Question 3:
 
