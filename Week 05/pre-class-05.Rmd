@@ -96,6 +96,8 @@ bmi     Body Mass Index
 A. Create a function called standardize.me() that takes a numeric vector as an argument, and returns the standardized version of the vector. 
 
 ```{r}
+
+#create standardize me function, which takes a numeric vector and returns a standardized vector
 standardize.me <- function(x){
   (x - mean(x, na.rm = T)) / sd(x, na.rm = T)
 }
@@ -107,6 +109,7 @@ standardize.me <- function(x){
 B. Assign all the numeric columns of the original WCGS dataset to a new dataset called WCGS.new.
 
 ```{r}
+#create new data frame containing the numeric columns of wcgs
 wcgs.new <- wcgs[ , map_lgl(wcgs, is.numeric)]
 ```
 
@@ -114,12 +117,15 @@ wcgs.new <- wcgs[ , map_lgl(wcgs, is.numeric)]
 C. Using a loop and your new function, standardize all the variables WCGS.new dataset.
 
 ```{r}
+#create empty matrix to store standardized values
 wcgs.standard <- matrix(nrow = 3154, ncol = 11)
 
+#loop through columns of wcgs.new, calculating standardized vectors and storing them in wcgs.standard
 for (i in seq_along(wcgs.new)){
-  wcgs.standard[, i] <- standardize.me(wcgs.new[, i])
+  wcgs.standard[, i] <- standardize.me(wcgs.new[ , i])
 }
 
+#reclass wcgs.standard as a dataframe with the column names of wcgs.new
 wcgs.standard <- as.data.frame(wcgs.standard)
 names(wcgs.standard) <- names(wcgs.new)
 ```
@@ -127,11 +133,46 @@ names(wcgs.standard) <- names(wcgs.new)
 
 D. What should the mean and standard deviation of all your new standardized variables be? Test your prediction by running a loop
 
+From intuition, our new variables should have mean of 0 and a standard deviation of 1. To be sure, let's check our data.
 
+```{r}
 
+for (i in seq_along(wcgs.standard)){
+  mean <- mean(wcgs.standard[, i], na.rm = T)
+  sd <- sd(wcgs.standard[, i], na.rm = T)
+  
+  print(
+    paste("The mean of column", i, "is", mean, "and the standardard deviation is", sd)
+  )
+}
+
+```
+
+Our results indicate that the mean and standard deviation of each column are very close to 0 and 1, respectively. This means our intution is correct and our function behaved as expected.
 
 ### Question 2: Looping to Calculate
 
 A. Using a loop, calculate the mean weight of the subjects separated by the type of CHD they have.
+
+```{r}
+
+for (type in levels(wcgs$typchd69)){
+  type_mean <- mean(wcgs[wcgs$typchd69 == type, ]$weight, na.rm = T)
+  print(
+    paste(type, type_mean)
+  )
+}
+```
+
+
 B. Now do the same thing, but now don’t use a loop
 
+```{r}
+
+library(dplyr)
+wcgs %>% 
+  group_by(typchd69) %>%
+  summarise("mean" = mean(weight, na.rm = T))
+```
+
+And fortunately, the results are identical. 
