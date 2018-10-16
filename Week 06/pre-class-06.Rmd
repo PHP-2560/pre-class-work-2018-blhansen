@@ -1,0 +1,67 @@
+# pre-class
+
+
+Make sure you commit this often with meaningful messages. 
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+1. Read the source code for each of the following three functions, puzzle out what they do, and then brainstorm better names.
+
+```{r}
+f1 <- function(string, prefix) {
+  substr(string, 1, nchar(prefix)) == prefix
+}
+f2 <- function(x) {
+  if (length(x) <= 1) return(NULL)
+  x[-length(x)]
+}
+f3 <- function(x, y) {
+  rep(y, length.out = length(x))
+}
+
+f1("meow2", "eow2")
+```
+
+Although the above functions are not named intuitively, we can still determine what tasks they are meant to perform. 
+
+It appears that f1 compares two strings, checking if the second string is contained at the beginning of the first string. If this is true f1 returns TRUE, otherwise it returns FALSE. A better name could be something like check_prefix.
+
+f2 takes a vector and returns the vector with the last element removed, returning a NULL value if it is given a NULL vector or a vector of length 1. A better name could be something like remove_last. 
+
+f3 will take a vector x and a value y, and will return a vector of length(x) which has y as the value for each index. A better name could be make_rep_vec. 
+
+2. Compare and contrast rnorm() and MASS::mvrnorm(). How could you make them more consistent?
+
+```{r}
+#?rnorm
+
+#?MASS::mvrnorm
+```
+
+After reading through the vignettes, it apears that rnorm takes arguments n, mean, and sd, which mvrnorm takes the arguments n, mu, and Sigma. While we know from experience that mean = mu and sigma = sd, for consistency the arugment names should be the same. 
+
+3. Use `lapply()` and an anonymous function to find the coefficient of variation (the standard deviation divided by the mean) for all columns in the mtcars dataset.
+
+```{r}
+lapply(mtcars, function(x) {sd(x, na.rm = T)/mean(x, na.rm = T)})
+```
+
+
+4. Use vapply() to:
+    a. Compute the standard deviation of every column in a numeric data frame
+    b. Compute the standard deviation of every numeric column in a mixed data frame. (Hint: you’ll need to use vapply() twice.)
+    
+```{r}
+#Part A
+vapply(mtcars, FUN = sd, FUN.VALUE = numeric(1))
+
+#Part B
+vapply(iris[ ,vapply(iris, FUN= is.numeric, FUN.VALUE = logical(1))], FUN = sd, FUN.VALUE = numeric(1))
+
+```
+
