@@ -59,7 +59,35 @@ gamble <- function(){
   history
 }
 
-plot(gamble())
+n <- 5000
+results <- replicate(n, gamble())
+
+#part a
+#probability that you will bust before making the 100th bet
+sum(unlist(lapply(results, FUN = function(x){length(x) < 100}))) / n
+
+#part b
+#probability that you will bust before making the 500th bet
+sum(unlist(lapply(results, FUN = function(x){length(x) < 500}))) / n
+
+#part c
+#mean busting time (if you bust before first 5000 hands)
+busted <- results[unlist(lapply(results, FUN = function(x){length(x) < n}))]
+mean(unlist(lapply(busted, length)))
+
+#part d
+#mean and variance of bankroll after 100 hands
+at_least_100 <- results[unlist(lapply(results, FUN = function(x){length(x) > 100}))]
+hands <- unlist(lapply(at_least_100, function(x){x[101:length(x)]}))
+mean(hands)
+var(hands)
+
+#part e
+#mean and variance of bankroll after 500 hands
+at_least_500 <- results[unlist(lapply(results, FUN = function(x){length(x) > 500}))]
+hands <- unlist(lapply(at_least_500, function(x){x[501:length(x)]}))
+mean(hands)
+var(hands)
 ```
 
 
@@ -67,3 +95,4 @@ plot(gamble())
     a. Is this a fair game? Simulate one hundred thousand sequential hands to determine the size of your return. Then repeat this simulation 99 more times to get a range of values to calculate the expectation.
     b. Repeat this process but change the starting probability to a new value within 2% either way. Get the expected return after 100 repetitions. Keep exploring until you have a return value that is as fair as you can make it. Can you do this automatically?
     c. Repeat again, keeping the initial probability at 48%, but this time change the probability increment to a value different from 1%. Get the expected return after 100 repetitions. Keep changing this value until you have a return value that is as fair as you can make it. 
+
