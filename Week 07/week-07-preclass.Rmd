@@ -51,9 +51,8 @@ gamble <- function(bankroll=1000, n_hands=5000){
       bankroll = bankroll - 100
     }
     
-    if (bankroll <= 0) {break}
-    
     history[i] = bankroll
+    if (bankroll <= 0) {break}
   }
   history
 }
@@ -96,7 +95,7 @@ var(hands)
     c. Repeat again, keeping the initial probability at 48%, but this time change the probability increment to a value different from 1%. Get the expected return after 100 repetitions. Keep changing this value until you have a return value that is as fair as you can make it. 
 
 ```{r}
-markov <- function(bankroll=1000, p_init=0.48, n_hands=5000){
+markov <- function(bankroll=1000, p_init=0.48, n_hands=5000, increment = 0.01){
   history = c()
   p = p_init
   
@@ -105,16 +104,50 @@ markov <- function(bankroll=1000, p_init=0.48, n_hands=5000){
       bankroll = bankroll + 100
       
       if (p != 1){
-        p = p + 0.01
+        p = p + increment
       }
     } else {
       bankroll = bankroll - 100
       p = p_init
     }
-    if (bankroll <= 0){break}
     history[i] = bankroll
   }
   history
 } 
+
+#part a
+#estimate expectation of return after one hundred thousand hands
+expectation <- function(p_init=0.48, increment = 0.01, n_hands=100000){
+  simulations <- replicate(n = 100, markov(n_hands = n_hands, p_init=p_init, increment = increment))
+  mean(unlist(lapply(simulations, function(x){x[length(x)]})))
+}
+#takes a long time to compute, n_hands = 100000 is very large
+expectation(0.48)
+
+#part b
+expectation(0.50)
+expectation(0.46)
+
+#try to automate
+#cut off at 20 steps to save time
+p = 0.48
+iterations = 0
+while(iterations < 20){
+  expect = expectation(p, n_hands = 1000)
+  if (expect > 0){p = p - 0.001} else {p = p + 0.001}
+  iterations = iterations + 1
+}
+p
+
+#part c
+#automate fair p with different increment value
+p = 0.48
+iterations = 0
+while(iterations < 20){
+  expect = expectation(p, increment = 0.005, n_hands = 1000)
+  if (expect > 0){p = p - 0.001} else {p = p + 0.001}
+  iterations = iterations + 1
+}
+p
 ```
 
