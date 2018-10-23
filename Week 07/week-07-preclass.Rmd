@@ -39,11 +39,10 @@ With this project we will simulate a famoues probability problem. This will not 
 Note: you *must* stop playing if your player has gone bust. How will you handle this in the `for` loop?
 
 ```{r}
-gamble <- function(){
-  bankroll = 1000
+gamble <- function(bankroll=1000, n_hands=5000){
   history = c()
   
-  for (i in 1:5000){
+  for (i in 1:n_hands){
     outcome = sample(0:1, 1)
     
     if (outcome == 1){
@@ -59,7 +58,7 @@ gamble <- function(){
   history
 }
 
-n <- 5000
+n <- 1000
 results <- replicate(n, gamble())
 
 #part a
@@ -95,4 +94,27 @@ var(hands)
     a. Is this a fair game? Simulate one hundred thousand sequential hands to determine the size of your return. Then repeat this simulation 99 more times to get a range of values to calculate the expectation.
     b. Repeat this process but change the starting probability to a new value within 2% either way. Get the expected return after 100 repetitions. Keep exploring until you have a return value that is as fair as you can make it. Can you do this automatically?
     c. Repeat again, keeping the initial probability at 48%, but this time change the probability increment to a value different from 1%. Get the expected return after 100 repetitions. Keep changing this value until you have a return value that is as fair as you can make it. 
+
+```{r}
+markov <- function(bankroll=1000, p_init=0.48, n_hands=5000){
+  history = c()
+  p = p_init
+  
+  for (i in 1:n_hands){
+    if (runif(1) < p){
+      bankroll = bankroll + 100
+      
+      if (p != 1){
+        p = p + 0.01
+      }
+    } else {
+      bankroll = bankroll - 100
+      p = p_init
+    }
+    if (bankroll <= 0){break}
+    history[i] = bankroll
+  }
+  history
+} 
+```
 
