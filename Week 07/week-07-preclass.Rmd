@@ -40,18 +40,23 @@ Note: you *must* stop playing if your player has gone bust. How will you handle 
 
 ```{r}
 gamble <- function(bankroll=1000, n_hands=5000){
+  #save time: history <- rep(NA, n_hands)
   history = c()
   
   for (i in 1:n_hands){
-    outcome = sample(0:1, 1)
+    #alternative to save space
+    #bankroll = bankroll + 200*rbinom(1,1,0.5) - 100
     
+    outcome = sample(0:1, 1)
     if (outcome == 1){
       bankroll = bankroll + 100
     } else {
       bankroll = bankroll - 100
     }
-    
     history[i] = bankroll
+    
+    #save time
+    #if (bankroll <= 0) {return(history[1:i])}
     if (bankroll <= 0) {break}
   }
   history
