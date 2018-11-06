@@ -21,15 +21,87 @@ options(scipen = 3, digits = 3)
 ## Exercises
 
 1. Read the HTML content of the following URL with a variable called webpage: https://money.cnn.com/data/us_markets/ At this point, it will also be useful to open this web page in your browser.
+```{r}
+library(rvest)
+
+url <-"https://money.cnn.com/data/us_markets/"
+
+webpage <- read_html(url)
+
+```
+
 2. Get the session details (status, type, size) of the above mentioned URL.
+```{r}
+html_session(url)
+```
+
 3. Extract all of the sector names from the “Stock Sectors” table (bottom left of the web page.)
+
+```{r}
+tables <- html_nodes(webpage, "table")
+stock_selectors <- html_table(tables[[2]])
+stock_selectors
+```
+
+
 4. Extract all of the “3 Month % Change” values from the “Stock Sectors” table.
+```{r}
+stock_selectors$`3 Month % Change`
+```
+
+
 5. Extract the table “What’s Moving” (top middle of the web page) into a data-frame.
+
+```{r}
+whats_moving <- html_table(tables[[1]])
+whats_moving
+```
+
+
 6. Re-construct all of the links from the first column of the “What’s Moving” table.
 Hint: the base URL is “https://money.cnn.com”
+
+```{r}
+html_nodes(tables[[1]], ".wsod_symbol") %>%
+  html_attr("href") -> links
+paste("https/money.cnn.com", links, sep ="")
+```
+
+
 7. Extract the titles under the “Latest News” section (bottom middle of the web page.)
+
+```{r}
+html_nodes(webpage, ".HeadlineList") %>%
+  html_nodes("[href]") %>%
+  html_text()
+```
+
+
 8. To understand the structure of the data in a web page, it is often useful to know what the underlying attributes are of the text you see.
 Extract the attributes (and their values) of the HTML element that holds the timestamp underneath the “What’s Moving” table.
+
+```{r}
+html_nodes(webpage, ".wsod_StockTimestamp") %>%
+  html_attrs()
+```
+
+
 9. Extract the values of the blue percentage-bars from the “Trending Tickers” table (bottom right of the web page.)
 Hint: in this case, the values are stored under the “class” attribute.
+
+```{r}
+tables[[3]] %>%
+  html_nodes("[class^=bars]") %>%
+  #remove comments if you want to remove "bars pct" from each value
+  html_attr("class") #%>%
+  #gsub(pattern="bars pct",replacement="")
+```
+
+
 10. Get the links of all of the “svg” images on the web page.
+
+```{r}
+html_nodes(webpage, "img") %>%
+  html_attr("src")
+```
+
