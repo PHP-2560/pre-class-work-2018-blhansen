@@ -23,9 +23,8 @@ ui <- fluidPage(
                            font-family: 'Comic Sans MS', 'Comic Sans', cursive
                            }",
                            "body{
-                            /*background: url('https://timedotcom.files.wordpress.com/2018/08/new-zealand-cat-ban.jpg');
-                            background-size: cover;*/
-                            background-color: cyan;
+                            background: url('https://timedotcom.files.wordpress.com/2018/08/new-zealand-cat-ban.jpg');
+                            background-size: cover;
                            }"
                          )
       ),
